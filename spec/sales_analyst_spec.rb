@@ -14,7 +14,6 @@ describe Analyst do
   :transactions => "./data/transactions.csv"
   })
     @sales_analyst = Analyst.new(@sales_engine)
-    # require 'pry'; binding.pry
   end
 
   it "finds average" do
@@ -112,6 +111,10 @@ describe Analyst do
   end
 
   it "returns an array of merchants with pending invoices" do
-    expect(@sales_analyst.merchant_with_pending_invoices.count).to eq(467)
+    expect(@sales_analyst.merchant_with_pending_invoices.count).to eq(448)
+  end
+
+  it "returns merchants_with_only_one_item" do
+    expect(@sales_analyst.merchants_with_only_one_item.count).to eq(243)
   end
 end
