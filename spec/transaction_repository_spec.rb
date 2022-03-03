@@ -56,7 +56,6 @@ describe TransactionRepository do
       transaction = @tr.find_all_by_result(:success)
 
       expect(transaction.class).to eq(Array)
-      require 'pry'; binding.pry
       expect(transaction.sample.result).to eq(:success)
     end
   end
