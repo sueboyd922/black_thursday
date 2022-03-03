@@ -16,8 +16,5 @@ module TimeHelper
     weekday
   end
 
-  # def fix_time(date)
-  #   binding.pry
-  # end
-
+  
 end
