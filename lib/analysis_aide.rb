@@ -27,4 +27,14 @@ module AnalysisAide
     end
     revenue
   end
+
+  def merchant_revenues
+    merchant_revenues_hash = {}
+    @sales_engine.invoices.all.each do |invoice|
+      merchant_id = invoice.merchant_id
+      merchant_revenues_hash[merchant_id] = 0 if !merchant_revenues_hash.key?(merchant_id)
+      merchant_revenues_hash[merchant_id] += invoice_total(invoice.id) if invoice_paid_in_full?(invoice.id)
+    end
+    merchant_revenues_hash
+  end
 end
