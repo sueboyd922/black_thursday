@@ -25,11 +25,19 @@ class CustomerRepository
   end
 
   def find_all_by_first_name(name)
-    find(@first_names, name)
+    search_name_fragment(@first_names, name)
   end
 
   def find_all_by_last_name(name)
-    find(@last_names, name)
+    search_name_fragment(@last_names, name)
+  end
+
+  def search_name_fragment(search_repo, search_name)
+    included_names = []
+    search_repo.each do |name, info|
+      included_names << info if name.downcase.include?(search_name.downcase)
+    end
+    included_names.flatten
   end
 
   def create(attributes)

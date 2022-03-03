@@ -35,10 +35,10 @@ describe CustomerRepository do
 
   describe '#find by last/first name' do
     it 'can find a customer by name' do
-      customer = @cr.find_all_by_first_name("Joey")
-      expect(customer.sample.first_name).to eq("Joey")
+      customer = @cr.find_all_by_first_name("oe")
+      expect(customer.sample.first_name.include?("oe")).to be true
       customer = @cr.find_all_by_last_name("Smith")
-      expect(customer.sample.last_name).to eq("Smith")
+      expect(customer.sample.last_name.include?("Smith")).to be true
     end
   end
 
