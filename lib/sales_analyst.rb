@@ -150,13 +150,8 @@ class Analyst
   end
 
   def top_revenue_earners(x)
-    merchant_revenues = {}
-    @sales_engine.invoices.all.each do |invoice|
-      merchant_id = invoice.merchant_id
-      merchant_revenues[merchant_id] = 0 if !merchant_revenues.key?(merchant_id)
-      merchant_revenues[merchant_id] += invoice_total(invoice.id) if invoice_paid_in_full?(invoice.id)
-    end
-    top_merchants = (merchant_revenues.values.sort.reverse.first(x)).map {|revenue| @sales_engine.merchants.find_by_id(merchant_revenues.key(revenue))}
+    sorted_merchants = merchant_revenues.values.sort.reverse.first(x)
+    top_merchants = sorted_merchants.map {|revenue| @sales_engine.merchants.find_by_id(merchant_revenues.key(revenue))}
   end
 
   def merchants_with_only_one_item
