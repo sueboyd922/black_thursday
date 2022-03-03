@@ -36,7 +36,6 @@ class Analyst
     end
   end
 
-
   def average_item_price_for_merchant(merchant_id)
     items = @sales_engine.items.find_all_by_merchant_id(merchant_id)
     unit_price_array = items.map { |price| price.unit_price}
@@ -156,4 +155,13 @@ class Analyst
     end
     top_merchants = (merchant_revenues.values.sort.reverse.first(x)).map {|revenue| @sales_engine.merchants.find_by_id(merchant_revenues.key(revenue))}
   end
+
+  def merchants_with_only_one_item
+    array_of_m_ids = []
+    @sales_engine.items.merchant_ids.each do |id, item|
+      array_of_m_ids << id if item.count == 1
+    end
+    array_of_merchants = array_of_m_ids.map { |id| @sales_engine.merchants.find_by_id(id)}
+  end
+
 end
