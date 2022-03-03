@@ -167,4 +167,8 @@ class Analyst
     merchants_by_month[months(month)]
   end
   
+  def revenue_by_merchant(merchant_id)
+    merchant_revenues[merchant_id]
+  end
+
 end
