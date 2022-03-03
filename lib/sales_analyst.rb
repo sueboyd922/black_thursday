@@ -164,4 +164,8 @@ class Analyst
     array_of_merchants = array_of_m_ids.map { |id| @sales_engine.merchants.find_by_id(id)}
   end
 
+  def merchants_with_only_one_item_registered_in_month(month)
+    merchants_by_month = merchants_with_only_one_item.group_by { |merchant| merchant.created_at.month}
+    merchants_by_month[months(month)]
+  end
 end
