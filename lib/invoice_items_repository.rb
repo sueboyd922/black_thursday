@@ -37,6 +37,7 @@ class InvoiceItemsRepository
   def create(attributes)
     invoice_item = InvoiceItem.new(create_attribute_hash(attributes))
     @repository << invoice_item
+    group_hash
     invoice_item
   end
 end

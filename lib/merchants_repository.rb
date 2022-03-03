@@ -38,6 +38,7 @@ class MerchantsRepository
   def create(attributes)
     merchant = Merchant.new(create_attribute_hash(attributes))
     @repository << merchant
+    group_hash
     merchant
   end
 end

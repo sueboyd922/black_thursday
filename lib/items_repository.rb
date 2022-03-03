@@ -3,6 +3,7 @@ require 'time'
 require_relative '../lib/item'
 require_relative '../lib/repository_aide'
 require 'bigdecimal'
+require 'bigdecimal/util'
 
 class ItemsRepository
   include RepositoryAide
@@ -59,6 +60,7 @@ class ItemsRepository
   def create(attributes)
     item = Item.new(create_attribute_hash(attributes))
     @repository << item
+    group_hash
     item
   end
 end

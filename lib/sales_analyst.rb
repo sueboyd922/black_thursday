@@ -34,7 +34,9 @@ class Analyst
     big_sellers = @sales_engine.items.merchant_ids.select do |merchant, items|
       items.count > (average_items_per_merchant + average_items_per_merchant_standard_deviation)
     end
+    big_sellers.keys.map {|id| @sales_engine.merchants.find_by_id(id)}
   end
+
 
   def average_item_price_for_merchant(merchant_id)
     items = @sales_engine.items.find_all_by_merchant_id(merchant_id)
@@ -73,6 +75,7 @@ class Analyst
     top_sellers = @sales_engine.invoices.merchant_ids.select do |id, list|
       list.count > (average_invoices_per_merchant + (average_items_per_merchant_standard_deviation * 2))
     end
+    top_sellers.keys.map {|id| @sales_engine.merchants.find_by_id(id)}
   end
 
   def bottom_merchants_by_invoice_count
@@ -127,17 +130,17 @@ class Analyst
   end
 
   def merchants_with_pending_invoices
-    coolio = @sales_engine.invoices.invoice_status[:pending].find_all do |invoice|
-              invoice_paid_in_full?(invoice.id) == false
-            end
-    yeah = coolio.map do |invoice|
-      invoice.merchant_id
-    end
-    array = []
-    yeah.each do |merchant_id|
-      array << @sales_engine.merchants.find_by_id(merchant_id)
-    end
-    array.uniq
+  coolio = @sales_engine.invoices.invoice_status[:pending].find_all do |invoice|
+            invoice_paid_in_full?(invoice.id) == false
+          end
+  yeah = coolio.map do |invoice|
+    invoice.merchant_id
+  end
+  array = []
+  yeah.each do |merchant_id|
+    array << @sales_engine.merchants.find_by_id(merchant_id)
+  end
+  array.uniq
   end
 
   def total_revenue_by_date(date)
@@ -168,4 +171,5 @@ class Analyst
     merchants_by_month = merchants_with_only_one_item.group_by { |merchant| merchant.created_at.month}
     merchants_by_month[months(month)]
   end
+  
 end

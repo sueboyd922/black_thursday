@@ -107,7 +107,7 @@ describe Analyst do
   end
 
   it "returns an array of merchants with pending invoices" do
-    expect(@sales_analyst.merchants_with_pending_invoices.count).to eq(448)
+    expect(@sales_analyst.merchants_with_pending_invoices.count).to eq(343)
   end
 
   it "returns merchants_with_only_one_item" do

@@ -59,6 +59,7 @@ class InvoiceRepository
   def create(attributes)
     invoice = Invoice.new(create_attribute_hash(attributes))
     @repository << invoice
+    group_hash
     invoice
   end
 end

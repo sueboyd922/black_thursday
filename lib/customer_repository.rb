@@ -43,6 +43,7 @@ class CustomerRepository
   def create(attributes)
     customer = Customer.new(create_attribute_hash(attributes))
     @repository << customer
+    group_hash
     customer
   end
 end

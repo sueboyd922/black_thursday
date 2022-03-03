@@ -45,6 +45,7 @@ class TransactionRepository
   def create(attributes)
     transaction = Transaction.new(create_attribute_hash(attributes))
     @repository << transaction
+    group_hash
     transaction
   end
 end

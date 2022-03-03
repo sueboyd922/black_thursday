@@ -21,7 +21,7 @@ module RepositoryAide
   def find_by_id(id)
     @repository.find {|element| element.id == id.to_i}
   end
-  
+
   def new_id
     new_id = @repository.sort_by {|element| element.id}.last.id
     new_id += 1
@@ -40,10 +40,18 @@ module RepositoryAide
     update = find_by_id(id)
     unless update.nil?
       attributes.each do |key, value|
-        find_by_id(id).instance_variable_set(key.to_s.insert(0, '@').to_sym, value)
+        unless unchangeable_keys(key)
+          find_by_id(id).instance_variable_set(key.to_s.insert(0, '@').to_sym, value)
+        end
       end
       update.updated_at = Time.now
     end
+    group_hash
+  end
+
+  def unchangeable_keys(key)
+    no_change_keys = [:id, :created_at, :merchant_id, :customer_id]
+    no_change_keys.include?(key)
   end
 
   def delete(id)
