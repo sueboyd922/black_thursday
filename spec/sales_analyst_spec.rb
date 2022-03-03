@@ -69,10 +69,6 @@ describe Analyst do
     expect(@sales_analyst.invoice_status(:returned)).to eq(13.5)
   end
 
-  it "can find the total revenue for the day" do
-    expect(@sales_analyst.total_revenue_by_date(date)).to eq(456)
-  end
-
   it "determines if invoice has been paid in full" do
     expect(@sales_analyst.invoice_paid_in_full?(46)).to eq(true)
     expect(@sales_analyst.invoice_paid_in_full?(204)).to eq(false)
@@ -112,6 +108,6 @@ describe Analyst do
   end
 
   it "returns an array of merchants with pending invoices" do
-    expect(@sales_analyst.merchant_with_pending_invoices.count).to eq(467)
+    expect(@sales_analyst.merchants_with_pending_invoices.count).to eq(467)
   end
 end
