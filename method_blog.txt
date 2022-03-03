@@ -1,0 +1,13 @@
+In order to figure out which items were the most sold and most profitable for a specific merchant we ended up with 5 total methods, one which was used in both.
+
+The first method we wrote was for 'most_sold_item_for_merchant'. We put a helper method in our module `AnalysisAide` called `num_times_items_ordered`. In it we accessed the hash of invoice_items sorted by item_ids so that we could figure out how many of each item was sold. We then created a new hash called `items_to_count` where the item was the key and the value was an integer corresponding to how many times the item was ordered.
+
+The next helper method we called `merchant_items_hash`. We used this method to create a new hash called `merch_items`. We did this by iterating over the hash created in the `num_times_items_ordered` method. In the each block we saved a variable called `merch_id` which held the merchant who was resposible for the current item. This merchant was then saved as a key in the array, whose value was an empty hash. The next step was to add a key/value pair to the empty hash. Each key in the merchant's hash was a count and the value was an array holding all the items of that merchant that had been ordered that many times.
+
+The final part of this method was in the method actually being called: `most_sold_item_for_merchant(merchant_id)`. Here we saved the merchant instance being referenced and passed it in to the hash created in the previous method. We then sorted the keys of this merchants hash and saved the one with the highest count. Using this number we were able to pull out all items sold the most by the merchant.
+
+The second method we wrote to find out the most profitable item we called `best_item_for_merchant`. The first step of this was in a method in the `AnalysisAide` module called `find_merchant_revenue_by_items` where we use the same hash as the previous method created in `merchant_items_hash`. We create a new hash called `revenue` where we iterate over that merchants items and save the revenue they generate (item unit price * count) as the key and the item as the value.
+
+We then use similar logic to the earlier method and sort the keys of the revenue hash and pick out the highest and return the item it corresponds to.
+
+There's probably a way easier way to do this. But voila. It worked.   
