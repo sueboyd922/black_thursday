@@ -107,10 +107,15 @@ describe Analyst do
   end
 
   it "returns an array of merchants with pending invoices" do
-    expect(@sales_analyst.merchant_with_pending_invoices.count).to eq(448)
+    expect(@sales_analyst.merchants_with_pending_invoices.count).to eq(448)
   end
 
   it "returns merchants_with_only_one_item" do
     expect(@sales_analyst.merchants_with_only_one_item.count).to eq(243)
+  end
+
+  it "returns an array of merchant/oneitem/month" do
+    expect(@sales_analyst.merchants_with_only_one_item_registered_in_month("March").count).to be(21)
+    expect(@sales_analyst.merchants_with_only_one_item_registered_in_month("June").count).to be(18)
   end
 end

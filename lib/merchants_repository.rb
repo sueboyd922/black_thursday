@@ -18,7 +18,6 @@ class MerchantsRepository
                     :updated_at => merchant[:updated_at]
                     })
                 end
-                require 'pry'; binding.pry
     group_hash
   end
 
