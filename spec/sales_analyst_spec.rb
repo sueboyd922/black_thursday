@@ -123,4 +123,9 @@ describe Analyst do
     expect(@sales_analyst.merchants_with_only_one_item_registered_in_month("March").count).to be(21)
     expect(@sales_analyst.merchants_with_only_one_item_registered_in_month("June").count).to be(18)
   end
+
+  it "returns total revenue of merchant" do
+    expect(@sales_analyst.revenue_by_merchant(12335938)).to eq(126300.9)
+  end
+
 end
