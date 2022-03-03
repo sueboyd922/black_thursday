@@ -36,7 +36,6 @@ class Analyst
     end
   end
 
-
   def average_item_price_for_merchant(merchant_id)
     items = @sales_engine.items.find_all_by_merchant_id(merchant_id)
     unit_price_array = items.map { |price| price.unit_price}
@@ -100,7 +99,7 @@ class Analyst
   def invoice_paid_in_full?(invoice_id)
     transactions = @sales_engine.transactions.find_all_by_invoice_id(invoice_id)
     return false if transactions.nil?
-    if transactions.map {|transaction| transaction.result }.include?("success")
+    if transactions.map {|transaction| transaction.result }.include?(:success)
       true
     else
       false
@@ -108,7 +107,7 @@ class Analyst
   end
 
   def invoice_total(invoice_id)
-    invoice_items = @sales_engine.invoice_items.find_all_by_invoice_id(invoice_id.to_s)
+    invoice_items = @sales_engine.invoice_items.find_all_by_invoice_id(invoice_id)
     sum = 0
     invoice_items.each { |invoice_item| sum += ((invoice_item.unit_price.to_f * invoice_item.quantity.to_f)/100.0) }
     sum
@@ -127,33 +126,46 @@ class Analyst
     revenue[highest_revenue]
   end
 
-  def merchant_with_pending_invoices
-  coolio = @in.invoice_status[:pending].find_all do |invoice|
-            invoice_paid_in_full?(invoice.id) == false
-          end
-  yeah = coolio.map do |invoice|
-    invoice.merchant_id
-  end
-  array = []
-  yeah.each do |merchant_id|
-    array << @mr.find_by_id(merchant_id)
-  end
-  array.uniq
+  def merchants_with_pending_invoices
+    coolio = @sales_engine.invoices.invoice_status[:pending].find_all do |invoice|
+              invoice_paid_in_full?(invoice.id) == false
+            end
+    yeah = coolio.map do |invoice|
+      invoice.merchant_id
+    end
+    array = []
+    yeah.each do |merchant_id|
+      array << @sales_engine.merchants.find_by_id(merchant_id)
+    end
+    array.uniq
   end
 
   def total_revenue_by_date(date)
-    invoice_id_by_date = @in.find_all_by_date(date).map { |invoice| invoice.id}
-    invoice_items_by_date = invoice_id_by_date.map {|invoice_id| @iir.find_all_by_invoice_id(invoice_id.to_s)}
+    invoice_id_by_date = @sales_engine.invoices.find_all_by_date(date).map { |invoice| invoice.id}
+    invoice_items_by_date = invoice_id_by_date.map {|invoice_id| @sales_engine.invoice_items.find_all_by_invoice_id(invoice_id)}
     revenue = invoice_items_by_date.flatten.map { |invoice| (invoice.unit_price * invoice.quantity)}.sum / 100
   end
 
   def top_revenue_earners(x)
     merchant_revenues = {}
-    @in.repository.each do |invoice|
+    @sales_engine.invoices.all.each do |invoice|
       merchant_id = invoice.merchant_id
       merchant_revenues[merchant_id] = 0 if !merchant_revenues.key?(merchant_id)
       merchant_revenues[merchant_id] += invoice_total(invoice.id) if invoice_paid_in_full?(invoice.id)
     end
-    top_merchants = (merchant_revenues.values.sort.reverse.first(x)).map {|revenue| @mr.find_by_id(merchant_revenues.key(revenue))}
+    top_merchants = (merchant_revenues.values.sort.reverse.first(x)).map {|revenue| @sales_engine.merchants.find_by_id(merchant_revenues.key(revenue))}
+  end
+
+  def merchants_with_only_one_item
+    array_of_m_ids = []
+    @sales_engine.items.merchant_ids.each do |id, item|
+      array_of_m_ids << id if item.count == 1
+    end
+    array_of_merchants = array_of_m_ids.map { |id| @sales_engine.merchants.find_by_id(id)}
+  end
+
+  def merchants_with_only_one_item_registered_in_month(month)
+    merchants_by_month = merchants_with_only_one_item.group_by { |merchant| merchant.created_at.month}
+    merchants_by_month[months(month)]
   end
 end
